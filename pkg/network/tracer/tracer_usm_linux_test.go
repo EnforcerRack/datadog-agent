@@ -959,8 +959,12 @@ func testHTTPsGoTLSCaptureNewProcessContainer(t *testing.T, cfg *config.Config) 
 	time.Sleep(5 * time.Second)
 	reqs := make(requestsMap)
 	for i := 0; i < expectedOccurrences; i++ {
-		resp, err := client.Get(fmt.Sprintf("https://localhost:%s/anything/%d/request-%d", serverPort, 200, i))
+		endpoint := fmt.Sprintf("https://localhost:%s/anything/%d/request-%d", serverPort, 200, i)
+		resp, err := client.Get(endpoint)
 		require.NoError(t, err)
+		buf, err := io.ReadAll(resp.Body)
+		require.NoError(t, err)
+		log.Infof("Sent %q and got %s", endpoint, string(buf))
 		resp.Body.Close()
 		reqs[resp.Request] = false
 	}
@@ -979,8 +983,11 @@ func testHTTPsGoTLSCaptureAlreadyRunningContainer(t *testing.T, cfg *config.Conf
 
 	client := &nethttp.Client{
 		Transport: &nethttp.Transport{
-			TLSClientConfig:   &tls.Config{InsecureSkipVerify: true},
-			DisableKeepAlives: false,
+			ForceAttemptHTTP2: false,
+			TLSClientConfig: &tls.Config{
+				InsecureSkipVerify: true,
+				NextProtos:         []string{"http/1.1"},
+			},
 		},
 	}
 
@@ -994,8 +1001,12 @@ func testHTTPsGoTLSCaptureAlreadyRunningContainer(t *testing.T, cfg *config.Conf
 	time.Sleep(5 * time.Second)
 	reqs := make(requestsMap)
 	for i := 0; i < expectedOccurrences; i++ {
-		resp, err := client.Get(fmt.Sprintf("https://localhost:%s/anything/%d/request-%d", serverPort, 200, i))
+		endpoint := fmt.Sprintf("https://localhost:%s/anything/%d/request-%d", serverPort, 200, i)
+		resp, err := client.Get(endpoint)
 		require.NoError(t, err)
+		buf, err := io.ReadAll(resp.Body)
+		require.NoError(t, err)
+		log.Infof("Sent %q and got %s", endpoint, string(buf))
 		resp.Body.Close()
 		reqs[resp.Request] = false
 	}
