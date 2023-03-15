@@ -101,31 +101,6 @@ func main() {
 			runService(false)
 			return
 		}
-		// sigh.  Go doesn't have boolean xor operator.  The options are mutually exclusive,
-		// make sure more than one wasn't specified
-		optcount := 0
-		if flags.Win.StartService {
-			optcount++
-		}
-		if flags.Win.StopService {
-			optcount++
-		}
-		if optcount > 1 {
-			fmt.Println("Incompatible options chosen")
-			return
-		}
-		if flags.Win.StartService {
-			if err = startService(); err != nil {
-				fmt.Printf("Error starting service %v\n", err)
-			}
-			return
-		}
-		if flags.Win.StopService {
-			if err = stopService(); err != nil {
-				fmt.Printf("Error stopping service %v\n", err)
-			}
-			return
-		}
 	}
 
 	// prepare go runtime
@@ -141,10 +116,4 @@ func main() {
 
 	// Invoke the Agent
 	Run(ctx)
-}
-
-func startService() error {
-}
-
-func stopService() error {
 }
