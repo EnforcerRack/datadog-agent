@@ -72,7 +72,7 @@ func (c *cfg) Object() config.ConfigReader {
 
 // NewMock exported mock builder to allow modifying mocks that might be
 // supplied in tests and used for dep injection.
-func newMock(deps dependencies, t testing.TB) Component {
+func newMock(deps dependencies, t testing.TB) (Component, error) {
 	old := config.Datadog
 	config.Datadog = config.NewConfig("mock", "XXXX", strings.NewReplacer())
 	c := &cfg{
@@ -100,7 +100,11 @@ func newMock(deps dependencies, t testing.TB) Component {
 	// 	}
 	// })
 
-	setupConfig(deps)
+	warnings, err := setupConfig(deps)
+	if err != nil {
+		return nil, err
+	}
+	c.warnings = warnings
 
 	// Overrides are explicit and will take precedence over any other
 	// setting
@@ -111,5 +115,5 @@ func newMock(deps dependencies, t testing.TB) Component {
 	// swap the existing config back at the end of the test.
 	t.Cleanup(func() { config.Datadog = old })
 
-	return c
+	return c, nil
 }
