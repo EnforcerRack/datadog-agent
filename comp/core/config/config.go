@@ -83,27 +83,7 @@ func newMock(deps dependencies, t testing.TB) (Component, error) {
 	// call InitConfig to set defaults.
 	config.InitConfig(config.Datadog)
 
-	// Viper's `GetXxx` methods read environment variables at the time they are
-	// called, if those names were passed explicitly to BindEnv*(), so we must
-	// also strip all `DD_` environment variables for the duration of the test.
-	// oldEnv := os.Environ()
-	// for _, kv := range oldEnv {
-	// 	if strings.HasPrefix(kv, "DD_") {
-	// 		kvslice := strings.SplitN(kv, "=", 2)
-	// 		os.Unsetenv(kvslice[0])
-	// 	}
-	// }
-	// t.Cleanup(func() {
-	// 	for _, kv := range oldEnv {
-	// 		kvslice := strings.SplitN(kv, "=", 2)
-	// 		os.Setenv(kvslice[0], kvslice[1])
-	// 	}
-	// })
-
-	warnings, err := setupConfig(deps)
-	if err != nil {
-		return nil, err
-	}
+	warnings, _ := setupConfig(deps)
 	c.warnings = warnings
 
 	// Overrides are explicit and will take precedence over any other
