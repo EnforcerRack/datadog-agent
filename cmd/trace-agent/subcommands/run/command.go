@@ -6,7 +6,6 @@
 package run
 
 import (
-	"context"
 	"os"
 	"os/signal"
 	"syscall"
@@ -17,9 +16,6 @@ import (
 	"github.com/DataDog/datadog-agent/cmd/trace-agent/subcommands"
 	coreconfig "github.com/DataDog/datadog-agent/comp/core/config"
 	"github.com/DataDog/datadog-agent/comp/trace/config"
-	pkgconfig "github.com/DataDog/datadog-agent/pkg/config"
-	"github.com/DataDog/datadog-agent/pkg/runtime"
-	"github.com/DataDog/datadog-agent/pkg/trace/watchdog"
 	"github.com/DataDog/datadog-agent/pkg/util/fxutil"
 	"github.com/DataDog/datadog-agent/pkg/util/log"
 )
@@ -64,27 +60,6 @@ func RunTraceAgentFct(cliParams *RunParams, defaultConfPath string, fct interfac
 		fx.Supply(coreconfig.NewAgentParamsWithSecrets(cliParams.ConfPath)),
 		coreconfig.Module,
 	)
-}
-
-func Start(cliParams *RunParams, config config.Component) error {
-	// Entrypoint here
-
-	ctx, cancelFunc := context.WithCancel(context.Background())
-
-	// prepare go runtime
-	runtime.SetMaxProcs()
-	if err := runtime.SetGoMemLimit(pkgconfig.IsContainerized()); err != nil {
-		log.Debugf("Couldn't set Go memory limit: %s", err)
-	}
-
-	// Handle stops properly
-	go func() {
-		defer watchdog.LogOnPanic()
-		handleSignal(cancelFunc)
-	}()
-
-	return runAgent(ctx, cliParams, config)
-
 }
 
 // handleSignal closes a channel to exit cleanly from routines
