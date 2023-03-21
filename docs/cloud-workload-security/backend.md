@@ -22,7 +22,7 @@ CWS logs have the following JSON schema:
             "properties": {
                 "syscall": {
                     "type": "string",
-                    "description": "Syscall is the name of the syscall that triggered the anomaly detection"
+                    "description": "Name of the syscall that triggered the anomaly detection event"
                 }
             },
             "additionalProperties": false,
@@ -557,49 +557,6 @@ CWS logs have the following JSON schema:
                 "req_protection"
             ],
             "description": "MProtectEventSerializer serializes a mmap event to JSON"
-        },
-        "MatchedRule": {
-            "properties": {
-                "RuleID": {
-                    "type": "string",
-                    "description": "RuleID is the rule ID of the rule that matched the event"
-                },
-                "RuleVersion": {
-                    "type": "string",
-                    "description": "RuleVersion is the version of the rule that matched the event"
-                },
-                "PolicyName": {
-                    "type": "string",
-                    "description": "PolicyName is the name of the policy of the rule that matched the event"
-                },
-                "PolicyVersion": {
-                    "type": "string",
-                    "description": "PolicyVersion is the version of the policy of the rule that matched the event"
-                }
-            },
-            "additionalProperties": false,
-            "type": "object",
-            "required": [
-                "RuleID",
-                "RuleVersion",
-                "PolicyName",
-                "PolicyVersion"
-            ],
-            "description": "MatchedRuleSerializer serializes a matched rule"
-        },
-        "MatchedRulesContext": {
-            "properties": {
-                "matched_rules": {
-                    "items": {
-                        "$ref": "#/$defs/MatchedRule"
-                    },
-                    "type": "array",
-                    "description": "MatchedRules is the list of rules that matched the event"
-                }
-            },
-            "additionalProperties": false,
-            "type": "object",
-            "description": "MatchedRulesContextSerializer serializes the matched rules"
         },
         "ModuleEvent": {
             "properties": {
@@ -1139,7 +1096,7 @@ CWS logs have the following JSON schema:
             "properties": {
                 "name": {
                     "type": "string",
-                    "description": "Name is the name of the security profile"
+                    "description": "Name of the security profile"
                 },
                 "status": {
                     "type": "string",
@@ -1147,14 +1104,14 @@ CWS logs have the following JSON schema:
                 },
                 "version": {
                     "type": "string",
-                    "description": "Version is the version of the profile in use"
+                    "description": "Version of the profile in use"
                 },
                 "tags": {
                     "items": {
                         "type": "string"
                     },
                     "type": "array",
-                    "description": "Tags is the list of tags associated to this profile"
+                    "description": "List of tags associated to this profile"
                 }
             },
             "additionalProperties": false,
@@ -1286,9 +1243,6 @@ CWS logs have the following JSON schema:
         "container": {
             "$ref": "#/$defs/ContainerContext"
         },
-        "matched_rules": {
-            "$ref": "#/$defs/MatchedRulesContext"
-        },
         "security_profile": {
             "$ref": "#/$defs/SecurityProfileContext"
         },
@@ -1326,7 +1280,6 @@ CWS logs have the following JSON schema:
 | `process` | $ref | Please see [ProcessContext](#processcontext) |
 | `dd` | $ref | Please see [DDContext](#ddcontext) |
 | `container` | $ref | Please see [ContainerContext](#containercontext) |
-| `matched_rules` | $ref | Please see [MatchedRulesContext](#matchedrulescontext) |
 | `security_profile` | $ref | Please see [SecurityProfileContext](#securityprofilecontext) |
 | `date` | string |  |
 
@@ -1338,7 +1291,7 @@ CWS logs have the following JSON schema:
     "properties": {
         "syscall": {
             "type": "string",
-            "description": "Syscall is the name of the syscall that triggered the anomaly detection"
+            "description": "Name of the syscall that triggered the anomaly detection event"
         }
     },
     "additionalProperties": false,
@@ -1353,7 +1306,7 @@ CWS logs have the following JSON schema:
 
 | Field | Description |
 | ----- | ----------- |
-| `syscall` | Syscall is the name of the syscall that triggered the anomaly detection |
+| `syscall` | Name of the syscall that triggered the anomaly detection event |
 
 
 ## `BPFEvent`
@@ -2158,76 +2111,6 @@ CWS logs have the following JSON schema:
 | `req_protection` | new memory segment protection |
 
 
-## `MatchedRule`
-
-
-{{< code-block lang="json" collapsible="true" >}}
-{
-    "properties": {
-        "RuleID": {
-            "type": "string",
-            "description": "RuleID is the rule ID of the rule that matched the event"
-        },
-        "RuleVersion": {
-            "type": "string",
-            "description": "RuleVersion is the version of the rule that matched the event"
-        },
-        "PolicyName": {
-            "type": "string",
-            "description": "PolicyName is the name of the policy of the rule that matched the event"
-        },
-        "PolicyVersion": {
-            "type": "string",
-            "description": "PolicyVersion is the version of the policy of the rule that matched the event"
-        }
-    },
-    "additionalProperties": false,
-    "type": "object",
-    "required": [
-        "RuleID",
-        "RuleVersion",
-        "PolicyName",
-        "PolicyVersion"
-    ],
-    "description": "MatchedRuleSerializer serializes a matched rule"
-}
-
-{{< /code-block >}}
-
-| Field | Description |
-| ----- | ----------- |
-| `RuleID` | RuleID is the rule ID of the rule that matched the event |
-| `RuleVersion` | RuleVersion is the version of the rule that matched the event |
-| `PolicyName` | PolicyName is the name of the policy of the rule that matched the event |
-| `PolicyVersion` | PolicyVersion is the version of the policy of the rule that matched the event |
-
-
-## `MatchedRulesContext`
-
-
-{{< code-block lang="json" collapsible="true" >}}
-{
-    "properties": {
-        "matched_rules": {
-            "items": {
-                "$ref": "#/$defs/MatchedRule"
-            },
-            "type": "array",
-            "description": "MatchedRules is the list of rules that matched the event"
-        }
-    },
-    "additionalProperties": false,
-    "type": "object",
-    "description": "MatchedRulesContextSerializer serializes the matched rules"
-}
-
-{{< /code-block >}}
-
-| Field | Description |
-| ----- | ----------- |
-| `matched_rules` | MatchedRules is the list of rules that matched the event |
-
-
 ## `ModuleEvent`
 
 
@@ -3016,7 +2899,7 @@ CWS logs have the following JSON schema:
     "properties": {
         "name": {
             "type": "string",
-            "description": "Name is the name of the security profile"
+            "description": "Name of the security profile"
         },
         "status": {
             "type": "string",
@@ -3024,14 +2907,14 @@ CWS logs have the following JSON schema:
         },
         "version": {
             "type": "string",
-            "description": "Version is the version of the profile in use"
+            "description": "Version of the profile in use"
         },
         "tags": {
             "items": {
                 "type": "string"
             },
             "type": "array",
-            "description": "Tags is the list of tags associated to this profile"
+            "description": "List of tags associated to this profile"
         }
     },
     "additionalProperties": false,
@@ -3049,10 +2932,10 @@ CWS logs have the following JSON schema:
 
 | Field | Description |
 | ----- | ----------- |
-| `name` | Name is the name of the security profile |
+| `name` | Name of the security profile |
 | `status` | Status defines in which state the security profile was when the event was triggered |
-| `version` | Version is the version of the profile in use |
-| `tags` | Tags is the list of tags associated to this profile |
+| `version` | Version of the profile in use |
+| `tags` | List of tags associated to this profile |
 
 
 ## `SignalEvent`

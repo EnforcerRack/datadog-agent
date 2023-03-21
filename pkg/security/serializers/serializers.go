@@ -523,37 +523,19 @@ type MountEventSerializer struct {
 
 // AnomalyDetectionSyscallEventSerializer serializes an anomaly detection for a syscall event
 type AnomalyDetectionSyscallEventSerializer struct {
-	// Syscall is the name of the syscall that triggered the anomaly detection
+	// Name of the syscall that triggered the anomaly detection event
 	Syscall string `json:"syscall"`
-}
-
-// MatchedRuleSerializer serializes a matched rule
-type MatchedRuleSerializer struct {
-	// RuleID is the rule ID of the rule that matched the event
-	RuleID string
-	// RuleVersion is the version of the rule that matched the event
-	RuleVersion string
-	// PolicyName is the name of the policy of the rule that matched the event
-	PolicyName string
-	// PolicyVersion is the version of the policy of the rule that matched the event
-	PolicyVersion string
-}
-
-// MatchedRulesContextSerializer serializes the matched rules
-type MatchedRulesContextSerializer struct {
-	// MatchedRules is the list of rules that matched the event
-	MatchedRules []*MatchedRuleSerializer `json:"matched_rules,omitempty"`
 }
 
 // SecurityProfileContextSerializer serializes the security profile context in an event
 type SecurityProfileContextSerializer struct {
-	// Name is the name of the security profile
+	// Name of the security profile
 	Name string `json:"name"`
 	// Status defines in which state the security profile was when the event was triggered
 	Status string `json:"status"`
-	// Version is the version of the profile in use
+	// Version of the profile in use
 	Version string `json:"version"`
-	// Tags is the list of tags associated to this profile
+	// List of tags associated to this profile
 	Tags []string `json:"tags"`
 }
 
@@ -580,26 +562,8 @@ type EventSerializer struct {
 	*ProcessContextSerializer               `json:"process,omitempty"`
 	*DDContextSerializer                    `json:"dd,omitempty"`
 	*ContainerContextSerializer             `json:"container,omitempty"`
-	*MatchedRulesContextSerializer          `json:"matched_rules,omitempty"`
 	*SecurityProfileContextSerializer       `json:"security_profile,omitempty"`
 	Date                                    utils.EasyjsonTime `json:"date,omitempty"`
-}
-
-func newMatchedRulesContextSerializer(e []*model.MatchedRule) *MatchedRulesContextSerializer {
-	var output MatchedRulesContextSerializer
-	for _, matchedRule := range e {
-		output.MatchedRules = append(output.MatchedRules, newMatchedRuleSerializer(matchedRule))
-	}
-	return &output
-}
-
-func newMatchedRuleSerializer(rule *model.MatchedRule) *MatchedRuleSerializer {
-	return &MatchedRuleSerializer{
-		RuleID:        rule.RuleID,
-		RuleVersion:   rule.RuleVersion,
-		PolicyName:    rule.PolicyName,
-		PolicyVersion: rule.PolicyVersion,
-	}
 }
 
 func newSecurityProfileContextSerializer(e *model.SecurityProfileContext) *SecurityProfileContextSerializer {
@@ -1136,7 +1100,6 @@ func NewEventSerializer(event *model.Event, resolvers *resolvers.Resolvers) *Eve
 
 	if model.IsAnomalyDetectionEvent(eventType.String()) {
 		s.SecurityProfileContextSerializer = newSecurityProfileContextSerializer(&event.SecurityProfileContext)
-		s.MatchedRulesContextSerializer = newMatchedRulesContextSerializer(event.Rules)
 	}
 
 	switch eventType {
