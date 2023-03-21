@@ -1021,9 +1021,6 @@ func checkRequests(t *testing.T, tr *Tracer, expectedOccurrences int, reqs reque
 	occurrences := PrintableInt(0)
 	require.Eventually(t, func() bool {
 		stats := getConnections(t, tr)
-		if len(stats.HTTP) > 0 {
-			fmt.Println(stats.HTTP)
-		}
 		occurrences += PrintableInt(countRequestsOccurrences(t, stats, reqs))
 		return int(occurrences) == expectedOccurrences
 	}, 3*time.Second, 100*time.Millisecond, "Expected to find the request %v times, got %v captured. Requests not found:\n%v", expectedOccurrences, &occurrences, reqs)
