@@ -1058,6 +1058,8 @@ func TestTLSClassification(t *testing.T) {
 	cfg.ProtocolClassificationEnabled = true
 	cfg.CollectTCPConns = true
 
+	cfg.ServiceMonitoringEnabled = true
+
 	if !classificationSupported(cfg) {
 		t.Skip("TLS classification platform not supported")
 	}
