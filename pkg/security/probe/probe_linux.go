@@ -1581,7 +1581,3 @@ func (p *Probe) IsActivityDumpEnabled() bool {
 func (p *Probe) IsActivityDumpTagRulesEnabled() bool {
 	return p.Config.RuntimeSecurity.ActivityDumpTagRulesEnabled
 }
-
-func (p *Probe) StatsPollingInterval() time.Duration {
-	return p.Config.Probe.StatsPollingInterval
-}
