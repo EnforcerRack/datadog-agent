@@ -45,9 +45,9 @@ func setParamFlags(cmd *cobra.Command, cliParams *RunParams) {
 		"enables CPU profiling and specifies profile path.")
 	cmd.PersistentFlags().StringVarP(&cliParams.MemProfile, "mem-profile", "m", "",
 		"enables memory profiling and specifies profilg.")
-	cmd.PersistentFlags().BoolVarP(&cliParams.Foreground, "foreground", "i", "",
+	cmd.PersistentFlags().BoolVarP(&cliParams.Foreground, "foreground", "i", false,
 		"runs the agent in the foreground.")
-	cmd.PersistentFlags().BoolVarP(&cliParams.Debug, "debug", "d", "",
+	cmd.PersistentFlags().BoolVarP(&cliParams.Debug, "debug", "d", false,
 		"runs the agent in debug mode.")
 }
 
