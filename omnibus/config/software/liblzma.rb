@@ -37,10 +37,6 @@ build do
   env["CPPFLAGS"] = "-I#{install_dir}/embedded/include" if windows?
   env["CFLAGS"] << " -fPIC"
 
-  patch source: "symvers-macos.patch", env: env
-
-  command "touch aclocal.m4 Makefile.am Makefile.in"
-
   config_command = [
     "--disable-debug",
     "--disable-dependency-tracking",
@@ -51,7 +47,6 @@ build do
     "--disable-lzmadec",
     "--disable-xzdec",
     "--disable-xz",
-    "--enable-symbol-versions",
   ]
 
   config_command << "--disable-nls" if windows?
