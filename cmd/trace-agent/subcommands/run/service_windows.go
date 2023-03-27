@@ -11,6 +11,7 @@ import (
 	"time"
 
 	"github.com/DataDog/datadog-agent/comp/trace/config"
+	tracecfg "github.com/DataDog/datadog-agent/pkg/trace/config"
 
 	"golang.org/x/sys/windows/svc"
 )
@@ -38,7 +39,7 @@ func (m *myservice) Execute(args []string, r <-chan svc.ChangeRequest, changes c
 					time.Sleep(100 * time.Millisecond)
 					changes <- c.CurrentStatus
 				case svc.Stop, svc.PreShutdown, svc.Shutdown:
-					elog.Info(0x40000006, config.ServiceName)
+					elog.Info(0x40000006, tracecfg.ServiceName)
 					changes <- svc.Status{State: svc.StopPending}
 					cancelFunc()
 					return
@@ -48,7 +49,7 @@ func (m *myservice) Execute(args []string, r <-chan svc.ChangeRequest, changes c
 			}
 		}
 	}()
-	elog.Info(0x40000003, config.ServiceName)
+	elog.Info(0x40000003, tracecfg.ServiceName)
 	runAgent(ctx, m.cliParams, m.config)
 
 	changes <- svc.Status{State: svc.Stopped}

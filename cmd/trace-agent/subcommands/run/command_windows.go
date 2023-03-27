@@ -8,11 +8,11 @@ package run
 import (
 	"context"
 	"fmt"
-	"time"
 
 	"github.com/DataDog/datadog-agent/cmd/trace-agent/subcommands"
 	"github.com/DataDog/datadog-agent/comp/trace/config"
 	"github.com/DataDog/datadog-agent/pkg/runtime"
+	tracecfg "github.com/DataDog/datadog-agent/pkg/trace/config"
 	"github.com/DataDog/datadog-agent/pkg/trace/watchdog"
 
 	"golang.org/x/sys/windows/svc"
@@ -69,9 +69,9 @@ func Start(cliParams *RunParams, config config.Component) error {
 func runService(cliParams *RunParams, config config.Component) {
 	var err error
 	if cliParams.Debug {
-		elog = debug.New(config.ServiceName)
+		elog = debug.New(tracecfg.ServiceName)
 	} else {
-		elog, err = eventlog.Open(config.ServiceName)
+		elog, err = eventlog.Open(tracecfg.ServiceName)
 		if err != nil {
 			return
 		}
@@ -82,8 +82,8 @@ func runService(cliParams *RunParams, config config.Component) {
 	if isDebugcliParams.Debug {
 		run = debug.Run
 	}
-	elog.Info(0x40000007, config.ServiceName)
-	err = run(config.ServiceName, &myservice{
+	elog.Info(0x40000007, tracecfg.ServiceName)
+	err = run(tracecfg.ServiceName, &myservice{
 		cliParams: cliParams,
 		config:    config,
 	})
@@ -92,5 +92,5 @@ func runService(cliParams *RunParams, config config.Component) {
 		elog.Error(0xc0000008, err.Error())
 		return
 	}
-	elog.Info(0x40000004, config.ServiceName)
+	elog.Info(0x40000004, tracecfg.ServiceName)
 }
