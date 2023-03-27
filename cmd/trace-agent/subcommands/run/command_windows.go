@@ -79,7 +79,7 @@ func runService(cliParams *RunParams, config config.Component) {
 	defer elog.Close()
 
 	run := svc.Run
-	if isDebugcliParams.Debug {
+	if cliParams.Debug {
 		run = debug.Run
 	}
 	elog.Info(0x40000007, tracecfg.ServiceName)
