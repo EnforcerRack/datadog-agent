@@ -32,7 +32,7 @@ The Datadog trace-agent aggregates, samples, and forwards traces to datadog
 submitted by tracers loaded into your application.`,
 		RunE: func(*cobra.Command, []string) error {
 			cliParams.GlobalParams = globalParamsGetter()
-			return RunTraceAgentFct(cliParams, "./bin/agent/dist/datadog.yaml", Start)
+			return RunTraceAgentFct(cliParams, cliParams.ConfPath, Start)
 		},
 	}
 
