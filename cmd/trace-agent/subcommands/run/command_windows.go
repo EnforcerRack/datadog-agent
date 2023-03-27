@@ -18,6 +18,8 @@ import (
 	"golang.org/x/sys/windows/svc"
 	"golang.org/x/sys/windows/svc/debug"
 	"golang.org/x/sys/windows/svc/eventlog"
+
+	"github.com/spf13/cobra"
 )
 
 var elog debug.Log
