@@ -17,6 +17,7 @@ import (
 	"github.com/DataDog/datadog-agent/pkg/runtime"
 	"github.com/DataDog/datadog-agent/pkg/trace/watchdog"
 	"github.com/DataDog/datadog-agent/pkg/util/log"
+	"github.com/spf13/cobra"
 )
 
 type RunParams struct {
@@ -28,6 +29,14 @@ type RunParams struct {
 	CPUProfile string
 	// MemProfile contains the value for the --mem-profile flag.
 	MemProfile string
+}
+
+func setParamFlags(cmd *cobra.Command, cliParams *RunParams) {
+	cmd.PersistentFlags().StringVarP(&cliParams.PIDFilePath, "pidfile", "p", "", "path for the PID file to be created")
+	cmd.PersistentFlags().StringVarP(&cliParams.CPUProfile, "cpu-profile", "f", "",
+		"enables CPU profiling and specifies profile path.")
+	cmd.PersistentFlags().StringVarP(&cliParams.MemProfile, "mem-profile", "m", "",
+		"enables memory profiling and specifies profilh.")
 }
 
 func Start(cliParams *RunParams, config config.Component) error {

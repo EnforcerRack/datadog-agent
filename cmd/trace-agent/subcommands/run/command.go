@@ -36,11 +36,7 @@ submitted by tracers loaded into your application.`,
 		},
 	}
 
-	runCmd.PersistentFlags().StringVarP(&cliParams.PIDFilePath, "pidfile", "p", "", "path for the PID file to be created")
-	runCmd.PersistentFlags().StringVarP(&cliParams.CPUProfile, "cpu-profile", "f", "",
-		"enables CPU profiling and specifies profile path.")
-	runCmd.PersistentFlags().StringVarP(&cliParams.MemProfile, "mem-profile", "m", "",
-		"enables memory profiling and specifies profilh.")
+	setParamFlags(runCmd, cliParams)
 
 	return runCmd
 }

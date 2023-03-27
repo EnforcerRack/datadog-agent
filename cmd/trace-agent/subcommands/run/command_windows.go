@@ -33,8 +33,20 @@ type RunParams struct {
 	MemProfile string
 	// Foreground contains the value for the --foreground flag.
 	Foreground bool
-	// Foreground contains the value for the --foreground flag.
+	// Debug contains the value for the --debug flag.
 	Debug bool
+}
+
+func setParamFlags(cmd *cobra.Command, cliParams *RunParams) {
+	cmd.PersistentFlags().StringVarP(&cliParams.PIDFilePath, "pidfile", "p", "", "path for the PID file to be created")
+	cmd.PersistentFlags().StringVarP(&cliParams.CPUProfile, "cpu-profile", "f", "",
+		"enables CPU profiling and specifies profile path.")
+	cmd.PersistentFlags().StringVarP(&cliParams.MemProfile, "mem-profile", "m", "",
+		"enables memory profiling and specifies profilg.")
+	cmd.PersistentFlags().BoolVarP(&cliParams.Foreground, "foreground", "i", "",
+		"runs the agent in the foreground.")
+	cmd.PersistentFlags().BoolVarP(&cliParams.Debug, "debug", "d", "",
+		"runs the agent in debug mode.")
 }
 
 func Start(cliParams *RunParams, config config.Component) error {
