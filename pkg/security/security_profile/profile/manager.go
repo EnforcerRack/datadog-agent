@@ -294,6 +294,11 @@ func (m *SecurityProfileManager) ShouldDeleteProfile(profile *SecurityProfile) {
 	// cleanup profile before insertion in cache
 	profile.reset()
 
+	if profile.selector.IsEmpty() {
+		// do not insert in cache
+		return
+	}
+
 	// add profile in cache
 	m.pendingCacheLock.Lock()
 	defer m.pendingCacheLock.Unlock()
@@ -442,5 +447,5 @@ func (m *SecurityProfileManager) unlinkProfile(profile *SecurityProfile, workloa
 	if err := m.securityProfileMap.Delete([]byte(workload.ID)); err != nil {
 		seclog.Errorf("couldn't unlink workload %s with profile %s: %v", workload.WorkloadSelector.String(), profile.Metadata.Name, err)
 	}
-	seclog.Infof("workload %s (selector: %s) successfully unlinked to profile %s", workload.ID, workload.WorkloadSelector.String(), profile.Metadata.Name)
+	seclog.Infof("workload %s (selector: %s) successfully unlinked from profile %s", workload.ID, workload.WorkloadSelector.String(), profile.Metadata.Name)
 }
