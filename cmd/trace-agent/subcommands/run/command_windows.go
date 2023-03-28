@@ -39,13 +39,8 @@ type RunParams struct {
 	Debug bool
 }
 
-func setParamFlags(cmd *cobra.Command, cliParams *RunParams) {
-	cmd.PersistentFlags().StringVarP(&cliParams.PIDFilePath, "pidfile", "p", "", "path for the PID file to be created")
-	cmd.PersistentFlags().StringVarP(&cliParams.CPUProfile, "cpu-profile", "f", "",
-		"enables CPU profiling and specifies profile path.")
-	cmd.PersistentFlags().StringVarP(&cliParams.MemProfile, "mem-profile", "m", "",
-		"enables memory profiling and specifies profilg.")
-	cmd.PersistentFlags().BoolVarP(&cliParams.Foreground, "foreground", "i", false,
+func setOSSpecificParamFlags(cmd *cobra.Command, cliParams *RunParams) {
+	cmd.PersistentFlags().BoolVarP(&cliParams.Foreground, "foreground", "f", false,
 		"runs the agent in the foreground.")
 	cmd.PersistentFlags().BoolVarP(&cliParams.Debug, "debug", "d", false,
 		"runs the agent in debug mode.")
