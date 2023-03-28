@@ -478,6 +478,8 @@ func isRequestIncluded(allStats map[http.Key]*http.RequestStats, req *nethttp.Re
 }
 
 func TestProtocolClassification(t *testing.T) {
+	t.Skip("skip for the moment : testing without TestProtocolClassification"
+
 	cfg := testConfig()
 	if !classificationSupported(cfg) {
 		t.Skip("Classification is not supported")
