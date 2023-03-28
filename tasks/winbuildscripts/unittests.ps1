@@ -10,6 +10,8 @@ if ($Env:TARGET_ARCH -eq "x64") {
 }
 & $Env:Python3_ROOT_DIR\python.exe -m  pip install -r requirements.txt
 
+& inv -e system-probe.object-files
+
 # Run invoke tasks unit tests
 & $Env:Python3_ROOT_DIR\python.exe -m tasks.release_tests
 & $Env:Python3_ROOT_DIR\python.exe -m tasks.libs.version_tests
