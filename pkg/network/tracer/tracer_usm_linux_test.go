@@ -13,6 +13,7 @@ import (
 	"context"
 	"crypto/tls"
 	"fmt"
+	"github.com/DataDog/datadog-agent/pkg/util/log"
 	"io"
 	"math/rand"
 	"net"
