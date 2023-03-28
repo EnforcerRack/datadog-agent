@@ -35,9 +35,17 @@ var (
 	tailCalls = []manager.TailCallRoute{
 		{
 			ProgArrayName: probes.ClassificationProgsMap,
-			Key:           0,
+			Key:           netebpf.ClassificationQueues,
 			ProbeIdentificationPair: manager.ProbeIdentificationPair{
-				EBPFFuncName: probes.ProtocolClassifierSocketFilter,
+				EBPFFuncName: probes.ProtocolClassifierQueuesSocketFilter,
+				UID:          probeUID,
+			},
+		},
+		{
+			ProgArrayName: probes.ClassificationProgsMap,
+			Key:           netebpf.ClassificationDBs,
+			ProbeIdentificationPair: manager.ProbeIdentificationPair{
+				EBPFFuncName: probes.ProtocolClassifierDBsSocketFilter,
 				UID:          probeUID,
 			},
 		},
@@ -97,13 +105,9 @@ func LoadTracer(config *config.Config, m *manager.Manager, mgrOpts manager.Optio
 		defer buf.Close()
 	}
 
-	// Use the config to determine what kernel probes should be enabled
-	enabledProbes, err := enabledProbes(config, runtimeTracer)
-	if err != nil {
-		return nil, fmt.Errorf("invalid probe configuration: %v", err)
+	if err = initManager(m, config, perfHandlerTCP, runtimeTracer); err != nil {
+		return nil, fmt.Errorf("could not initialize manager: %w", err)
 	}
-
-	initManager(m, config, perfHandlerTCP, runtimeTracer)
 
 	telemetryMapKeys := errtelemetry.BuildTelemetryKeys(m)
 	mgrOpts.ConstantEditors = append(mgrOpts.ConstantEditors, telemetryMapKeys...)
@@ -132,14 +136,22 @@ func LoadTracer(config *config.Config, m *manager.Manager, mgrOpts manager.Optio
 		// in classification, preventing the program to load even though
 		// we won't use it. We change the type to a simple array map to
 		// circumvent that.
-		mgrOpts.MapSpecEditors[probes.ProtocolClassificationBufMap] = manager.MapSpecEditor{
-			Type:       ebpf.Array,
-			EditorFlag: manager.EditType,
+		for _, mapName := range []string{probes.ProtocolClassificationBufMap, probes.KafkaClientIDBufMap, probes.KafkaTopicNameBufMap} {
+			mgrOpts.MapSpecEditors[mapName] = manager.MapSpecEditor{
+				Type:       ebpf.Array,
+				EditorFlag: manager.EditType,
+			}
 		}
 	}
 
 	if err := errtelemetry.ActivateBPFTelemetry(m, undefinedProbes); err != nil {
 		return nil, fmt.Errorf("could not activate ebpf telemetry: %w", err)
+	}
+
+	// Use the config to determine what kernel probes should be enabled
+	enabledProbes, err := enabledProbes(config, runtimeTracer)
+	if err != nil {
+		return nil, fmt.Errorf("invalid probe configuration: %v", err)
 	}
 
 	// exclude all non-enabled probes to ensure we don't run into problems with unsupported probe types

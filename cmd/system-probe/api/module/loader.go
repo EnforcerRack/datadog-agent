@@ -46,7 +46,9 @@ type loader struct {
 // * Initialization using the provided Factory;
 // * Registering the HTTP endpoints of each module;
 func Register(cfg *config.Config, httpMux *mux.Router, factories []Factory) error {
-	driver.Init(cfg)
+	if err := driver.Init(cfg); err != nil {
+		log.Warnf("Failed to load driver subsystem %v", err)
+	}
 
 	for _, factory := range factories {
 		if !cfg.ModuleIsEnabled(factory.Name) {
@@ -85,7 +87,7 @@ func Register(cfg *config.Config, httpMux *mux.Router, factories []Factory) erro
 
 	if !driver.IsNeeded() {
 		// if running, shut it down
-		log.Debug("system-probe module initialization complete, driver not needed, shutting down")
+		log.Debug("Shutting down the driver.  Upon successful initialization, it was not needed by the current configuration.")
 
 		// shut the driver down and optionally disable it, if closed source isn't allowed anymore
 		if err := driver.ForceStop(); err != nil {

@@ -151,12 +151,15 @@ def genconfig(
         env = load_user_env(ctx, provider, uservars)
 
     # set KITCHEN_ARCH if it's not set in the user env
-    if not 'KITCHEN_ARCH' in env and not ('KITCHEN_ARCH' in os.environ.keys()):
-            env['KITCHEN_ARCH'] = arch
+    if 'KITCHEN_ARCH' not in env and not ('KITCHEN_ARCH' in os.environ.keys()):
+        env['KITCHEN_ARCH'] = arch
 
     env['TEST_PLATFORMS'] = testplatforms
 
-    env['TEST_IMAGE_SIZE'] = imagesize if imagesize else ""
+    if provider == "azure":
+        env['TEST_IMAGE_SIZE'] = imagesize if imagesize else ""
+    elif provider == "ec2" and imagesize:
+        env['KITCHEN_EC2_INSTANCE_TYPE'] = imagesize
 
     if fips:
         env['FIPS'] = 'true'
@@ -221,11 +224,11 @@ def load_user_env(_, provider, varsfile):
     if os.path.exists(varsfile):
         with open(varsfile, "r") as f:
             vars = json.load(f)
-            for key, val in vars['global'].items():
+            for key, val in vars.get("global", {}).items():
                 if commentpattern.match(key):
                     continue
                 env[key] = val
-            for key, val in vars[provider].items():
+            for key, val in vars.get(provider, {}).items():
                 if commentpattern.match(key):
                     continue
                 env[key] = val
