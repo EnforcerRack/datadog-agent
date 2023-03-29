@@ -35,14 +35,27 @@
 
 FROM datadog/agent:latest
 
-# Install any additional dependencies here, if necessary
+# Install dependencies
+RUN yum -y update && \
+    yum -y install wget && \
+    wget -q https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm && \
+    rpm -ivh epel-release-latest-7.noarch.rpm && \
+    yum -y install python-pip && \
+    pip install requests && \
+    pip install datadog && \
+    rm -f epel-release-latest-7.noarch.rpm && \
+    yum clean all
+
+# Copy Datadog Agent configuration files
+COPY datadog.yaml /etc/datadog.yaml
+COPY conf.d/* /etc/datadog-agent/conf.d/
 
 # Set the environment variables needed to configure the Datadog Agent
 ENV DD_API_KEY="9357ee80-cb99-4678-8db2-997abaaa0a0e"
 ENV DD_APM_ENABLED=true
 ENV DD_LOGS_ENABLED=true
 
-COPY datadog.yaml /etc/datadog-agent/datadog.yaml
+# COPY datadog.yaml /etc/datadog-agent/datadog.yaml
 
 # Expose the port that the Datadog Agent uses to receive data
 EXPOSE 8125/udp
