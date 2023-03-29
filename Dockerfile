@@ -33,23 +33,10 @@
 
 # CMD ["datadog-agent", "start"]
 
-# Use the official Datadog Agent image
-FROM datadog/agent:latest
+FROM openshift/origin
 
-# Set the OpenShift user ID as the agent user ID
-USER root
+# Install Datadog Agent
+RUN curl -L https://raw.githubusercontent.com/DataDog/datadog-agent/master/cmd/agent/install_script.sh | DD_API_KEY='9357ee80-cb99-4678-8db2-997abaaa0a0e' bash
 
-# Install necessary packages
-RUN yum install -y nc
-
-# Expose the port that the agent will use to communicate with Datadog
-EXPOSE 8125/udp
-
-# Copy the Datadog configuration file
-COPY datadog.yaml /etc/datadog-agent/datadog.yaml
-
-# Set the agent command
-CMD ["agent"]
-
-# Set the OpenShift user ID as the agent user ID
-USER 1001
+# Start Datadog Agent
+CMD ["/opt/datadog-agent/bin/agent", "start"]
