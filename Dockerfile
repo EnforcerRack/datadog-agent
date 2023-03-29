@@ -24,7 +24,7 @@ FROM centos:7
 RUN yum install -y wget
 
 # Download the Datadog Agent installer
-RUN DD_AGENT_MAJOR_VERSION=7 DD_API_KEY=<YOUR_API_KEY> DD_SITE="datadoghq.com" \
+RUN DD_AGENT_MAJOR_VERSION=7 DD_API_KEY="9357ee80-cb99-4678-8db2-997abaaa0a0e" DD_SITE="datadoghq.com" \
     DD_INSTALL_ONLY=true \
     DD_LOGS_STDOUT=true \
     sh -c "$(wget https://raw.githubusercontent.com/DataDog/datadog-agent/master/cmd/agent/install_script.sh -O -)"
