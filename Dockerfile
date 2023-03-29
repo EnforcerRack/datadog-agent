@@ -33,10 +33,17 @@
 
 # CMD ["datadog-agent", "start"]
 
-FROM openshift/origin
+FROM datadog/agent:latest
 
-# Install Datadog Agent
-RUN curl -L https://raw.githubusercontent.com/DataDog/datadog-agent/master/cmd/agent/install_script.sh | DD_API_KEY='9357ee80-cb99-4678-8db2-997abaaa0a0e' bash
+# Install any additional dependencies here, if necessary
 
-# Start Datadog Agent
-CMD ["/opt/datadog-agent/bin/agent", "start"]
+# Set the environment variables needed to configure the Datadog Agent
+ENV DD_API_KEY="9357ee80-cb99-4678-8db2-997abaaa0a0e"
+ENV DD_APM_ENABLED=true
+ENV DD_LOGS_ENABLED=true
+
+# Expose the port that the Datadog Agent uses to receive data
+EXPOSE 8125/udp
+
+# Start the Datadog Agent
+CMD ["agent"]
