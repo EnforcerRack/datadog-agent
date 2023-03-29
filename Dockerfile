@@ -42,8 +42,12 @@ ENV DD_API_KEY="9357ee80-cb99-4678-8db2-997abaaa0a0e"
 ENV DD_APM_ENABLED=true
 ENV DD_LOGS_ENABLED=true
 
+COPY datadog.yaml /etc/datadog-agent/datadog.yaml
+
 # Expose the port that the Datadog Agent uses to receive data
 EXPOSE 8125/udp
 
 # Start the Datadog Agent
-CMD ["agent"]
+# CMD ["agent"]
+
+CMD ["datadog-agent-git", "start"]
