@@ -8,7 +8,7 @@ RUN yum -y update && \
     yum clean all
 
 # Install the Datadog Agent
-RUN sh -c "curl -s https://raw.githubusercontent.com/DataDog/datadog-agent/master/cmd/agent/install_script.sh | DD_API_KEY=9357ee80-cb99-4678-8db2-997abaaa0a0e bash"
+RUN DD_API_KEY=9357ee80-cb99-4678-8db2-997abaaa0a0e bash -c "$(curl -L https://raw.githubusercontent.com/DataDog/datadog-agent/master/cmd/agent/install_script.sh)"
 
 # Copy the Datadog Agent configuration file
 COPY datadog.yaml /etc/datadog-agent/datadog.yaml
