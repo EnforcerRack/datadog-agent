@@ -36,15 +36,15 @@
 FROM datadog/agent:latest
 
 # Install dependencies
-RUN rpm -y update && \
-    rpm -y install wget && \
-    wget -q https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm && \
-    rpm -ivh epel-release-latest-7.noarch.rpm && \
-    rpm -y install python-pip && \
-    pip install requests && \
-    pip install datadog && \
-    rm -f epel-release-latest-7.noarch.rpm && \
-    rpm clean all
+# RUN rpm -y update && \
+#     rpm -y install wget && \
+#     wget -q https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm && \
+#     rpm -ivh epel-release-latest-7.noarch.rpm && \
+#     rpm -y install python-pip && \
+#     pip install requests && \
+#     pip install datadog && \
+#     rm -f epel-release-latest-7.noarch.rpm && \
+#     rpm clean all
 
 # Copy Datadog Agent configuration files
 COPY datadog.yaml /etc/datadog.yaml
