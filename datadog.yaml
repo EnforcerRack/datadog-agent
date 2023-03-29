@@ -1,24 +1,26 @@
-# log_level: INFO
-
-# api_key: "9357ee80-cb99-4678-8db2-997abaaa0a0e"
-
-# logs_enabled: true
-# logs_config:
-#   use_http: true
-#   use_tcp: false
-
-# logs:
-#   - type: container
-#     path: /var/log/containers/*.log
-#     service: datadog-agent
-#     source: openshift
-#     sourcecategory: sourcecode
-
-## Provides autodetected defaults, for vanilla Docker environments,
-## please see datadog.yaml.example for all supported options
-
-apm_config:
-  apm_non_local_traffic: true
-
-# Use java container support
-jmx_use_container_support: true
+logs:
+  - type: azure
+    client_id: "6d6af3b6-c612-4e05-9b03-7e3d55effdeb"
+    client_secret: "tWZ8Q~eOiseIWEL3D_BBVpYNI5g-G2tMKcdaXaMJ"
+    tenant_id: "61efb009-a62a-4335-8d1b-07c9813eb587"
+    subscription_id: "6c1186e3-72db-44a8-84c8-60b1d8ad524a"
+    log_queries:
+      - resourceUri: "/subscriptions/6c1186e3-72db-44a8-84c8-60b1d8ad524a/resourceGroups/OpenShift_PRO/providers/Microsoft.Storage/storageAccounts/appsocisstorage"
+        query: |
+          AzureDiagnostics
+          | where ResourceProvider == "MICROSOFT.STORAGE"
+          | where Resource == "appsocisstorage"
+          | where Level == "Error"
+          | project message
+# metrics:
+#   - provider: azure
+#     client_id: "6d6af3b6-c612-4e05-9b03-7e3d55effdeb"
+#     client_secret: "tWZ8Q~eOiseIWEL3D_BBVpYNI5g-G2tMKcdaXaMJ"
+#     tenant_id: "61efb009-a62a-4335-8d1b-07c9813eb587"
+#     subscription_id: "6c1186e3-72db-44a8-84c8-60b1d8ad524a"
+#     resource_type: "virtualMachines"
+#     metric_queries:
+#       - metricName: Percentage CPU
+#         aggregation: Average
+#         timeGrain: PT1M
+#         resourceId: "/subscriptions/6c1186e3-72db-44a8-84c8-60b1d8ad524a/resourceGroups/OpenShift_PRO/providers/MICROSOFT.STORAGE/virtualMachines/appsocisstorage"
