@@ -48,7 +48,7 @@ FROM datadog/agent:latest
 
 # Copy Datadog Agent configuration files
 COPY datadog.yaml /etc/datadog.yaml
-COPY conf.d/* /etc/datadog-agent/conf.d/
+# COPY conf.d/* /etc/datadog-agent/conf.d/
 
 # Set the environment variables needed to configure the Datadog Agent
 ENV DD_API_KEY="9357ee80-cb99-4678-8db2-997abaaa0a0e"
