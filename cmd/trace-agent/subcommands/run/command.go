@@ -43,7 +43,7 @@ submitted by tracers loaded into your application.`,
 
 func setParamFlags(cmd *cobra.Command, cliParams *RunParams) {
 	cmd.PersistentFlags().StringVarP(&cliParams.PIDFilePath, "pidfile", "p", "", "path for the PID file to be created")
-	cmd.PersistentFlags().StringVarP(&cliParams.CPUProfile, "cpu-profile", "c", "",
+	cmd.PersistentFlags().StringVarP(&cliParams.CPUProfile, "cpu-profile", "l", "",
 		"enables CPU profiling and specifies profile path.")
 	cmd.PersistentFlags().StringVarP(&cliParams.MemProfile, "mem-profile", "m", "",
 		"enables memory profiling and specifies profilh.")
