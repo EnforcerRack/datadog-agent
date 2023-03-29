@@ -20,4 +20,4 @@ RUN chown -R dd-agent:dd-agent /etc/datadog-agent
 USER dd-agent
 
 # Start the Datadog Agent
-CMD ["/opt/datadog-agent/bin/agent", "start"]
+# CMD ["/opt/datadog-agent/bin/agent", "start"]
