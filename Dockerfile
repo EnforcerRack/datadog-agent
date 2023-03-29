@@ -39,6 +39,6 @@ USER 1001
 
 # Start the Datadog Agent
 
-# RUN chmod +x /opt/datadog-agent/bin/agent
+RUN chmod +x /opt/datadog-agent/bin/agent
 
-CMD [chmod +x "/opt/datadog-agent/bin/agent", "start"]
+# CMD ["/opt/datadog-agent/bin/agent", "start"]
