@@ -1,66 +1,41 @@
-# FROM registry.access.redhat.com/ubi8/ubi:latest
+# FROM datadog/agent:latest
 
-# USER root
+# # Copy Datadog Agent configuration files
+# COPY datadog.yaml /etc/datadog.yaml
 
-# # Install required packages
-# RUN rpm -y update && \
-#     rpm -y install curl gnupg && \
-#     rpm clean all
+# # Set the environment variables needed to configure the Datadog Agent
+# ENV DD_API_KEY="9357ee80-cb99-4678-8db2-997abaaa0a0e"
+# ENV DD_APM_ENABLED=true
+# ENV DD_LOGS_ENABLED=true
 
-# # Install the Datadog Agent
-# RUN DD_API_KEY=9357ee80-cb99-4678-8db2-997abaaa0a0e bash -c "$(curl -L https://s3.amazonaws.com/dd-agent/scripts/install_script_agent7.sh)"
-
-# # Copy the Datadog Agent configuration file
 # COPY datadog.yaml /etc/datadog-agent/datadog.yaml
 
-# # Change ownership of the configuration file to the Datadog Agent user
-# RUN chown -R dd-agent:dd-agent /etc/datadog-agent
-
-# # Set the user to run the Datadog Agent
-# USER dd-agent
+# # Expose the port that the Datadog Agent uses to receive data
+# EXPOSE 8125/udp
 
 # # Start the Datadog Agent
-# CMD ["/opt/datadog-agent/bin/agent", "start"]
-
-# FROM ubuntu:latest
-
-# RUN apt-get update && apt-get install -y apt-transport-https gnupg curl
-# RUN sh -c "echo 'deb https://apt.datadoghq.com/ stable main' > /etc/apt/sources.list.d/datadog.list"
-# RUN curl -sL 'https://keys.datadoghq.com/DATADOG_RPM_KEY.public' | apt-key add -
-# RUN apt-get update && apt-get install -y datadog-agent
-
-# COPY datadog.yaml /etc/datadog-agent/datadog.yaml
+# # CMD ["agent"]
 
 # CMD ["datadog-agent", "start"]
 
-FROM datadog/agent:latest
+FROM centos:7
 
-# Install dependencies
-# RUN rpm -y update && \
-#     rpm -y install wget && \
-#     wget -q https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm && \
-#     rpm -ivh epel-release-latest-7.noarch.rpm && \
-#     rpm -y install python-pip && \
-#     pip install requests && \
-#     pip install datadog && \
-#     rm -f epel-release-latest-7.noarch.rpm && \
-#     rpm clean all
+# Install Datadog Agent dependencies
+RUN yum install -y wget
 
-# Copy Datadog Agent configuration files
-COPY datadog.yaml /etc/datadog.yaml
-# COPY conf.d/* /etc/datadog-agent/conf.d/
+# Download the Datadog Agent installer
+RUN DD_AGENT_MAJOR_VERSION=7 DD_API_KEY=<YOUR_API_KEY> DD_SITE="datadoghq.com" \
+    DD_INSTALL_ONLY=true \
+    DD_LOGS_STDOUT=true \
+    sh -c "$(wget https://raw.githubusercontent.com/DataDog/datadog-agent/master/cmd/agent/install_script.sh -O -)"
 
-# Set the environment variables needed to configure the Datadog Agent
-ENV DD_API_KEY="9357ee80-cb99-4678-8db2-997abaaa0a0e"
-ENV DD_APM_ENABLED=true
-ENV DD_LOGS_ENABLED=true
+# Set up OpenShift user
+RUN chgrp -R 0 /opt/datadog-agent && \
+    chmod -R g=u /opt/datadog-agent && \
+    useradd -u 1001 -r -g 0 -s /sbin/nologin -c "Default user" default
 
-# COPY datadog.yaml /etc/datadog-agent/datadog.yaml
-
-# Expose the port that the Datadog Agent uses to receive data
-EXPOSE 8125/udp
+# Change to OpenShift user
+USER 1001
 
 # Start the Datadog Agent
-# CMD ["agent"]
-
-CMD ["datadog-agent", "start"]
+CMD ["/opt/datadog-agent/bin/agent", "start"]
