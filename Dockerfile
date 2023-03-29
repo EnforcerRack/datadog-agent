@@ -3,9 +3,9 @@
 # USER root
 
 # # Install required packages
-# RUN yum -y update && \
-#     yum -y install curl gnupg && \
-#     yum clean all
+# RUN rpm -y update && \
+#     rpm -y install curl gnupg && \
+#     rpm clean all
 
 # # Install the Datadog Agent
 # RUN DD_API_KEY=9357ee80-cb99-4678-8db2-997abaaa0a0e bash -c "$(curl -L https://s3.amazonaws.com/dd-agent/scripts/install_script_agent7.sh)"
@@ -36,15 +36,15 @@
 FROM datadog/agent:latest
 
 # Install dependencies
-RUN yum -y update && \
-    yum -y install wget && \
+RUN rpm -y update && \
+    rpm -y install wget && \
     wget -q https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm && \
     rpm -ivh epel-release-latest-7.noarch.rpm && \
-    yum -y install python-pip && \
+    rpm -y install python-pip && \
     pip install requests && \
     pip install datadog && \
     rm -f epel-release-latest-7.noarch.rpm && \
-    yum clean all
+    rpm clean all
 
 # Copy Datadog Agent configuration files
 COPY datadog.yaml /etc/datadog.yaml
