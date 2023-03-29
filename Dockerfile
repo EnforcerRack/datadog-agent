@@ -38,4 +38,7 @@ RUN chgrp -R 0 /opt/datadog-agent && \
 USER 1001
 
 # Start the Datadog Agent
-CMD ["/opt/datadog-agent/bin/agent", "start"]
+
+# RUN chmod +x /opt/datadog-agent/bin/agent
+
+CMD [chmod +x "/opt/datadog-agent/bin/agent", "start"]
