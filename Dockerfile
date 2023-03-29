@@ -63,4 +63,4 @@ EXPOSE 8125/udp
 # Start the Datadog Agent
 # CMD ["agent"]
 
-CMD ["datadog-agent-git", "start"]
+CMD ["datadog-agent", "start"]
