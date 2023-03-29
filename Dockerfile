@@ -38,7 +38,7 @@ RUN chgrp -R 0 /opt/datadog-agent && \
 USER 1001
 
 # Start the Datadog Agent
-RUN chown 1001 /opt/datadog-agent/bin/agent.
+RUN chown 1001 /opt/datadog-agent/bin/agent
 
 # RUN chmod +x /opt/datadog-agent/bin/agent
 
